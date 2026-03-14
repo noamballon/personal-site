@@ -11,6 +11,7 @@ export async function getGallery() {
       images[] {
         _key,
         alt,
+        date,
         asset
       }
     }

@@ -7,7 +7,8 @@ export default async function Home() {
     id: p._key,
     url: urlFor(p).url(),
     alt: p.alt ?? '',
+    date: p.date ?? '',
   }))
 
-  return <PhotoViewer photos={urls} title={gallery.title ?? ''} />
+  return <PhotoViewer photos={urls} />
 }

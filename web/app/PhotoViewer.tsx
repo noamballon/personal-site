@@ -2,9 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react'
 
-type Photo = { id: string; url: string; alt: string }
+type Photo = { id: string; url: string; alt: string; date: string }
 
-export default function PhotoViewer({ photos, title }: { photos: Photo[]; title: string }) {
+function formatDate(date: string) {
+  if (!date) return ''
+  const [y, m, d] = date.split('-')
+  return `${m}-${d}-${y.slice(2)}`
+}
+
+export default function PhotoViewer({ photos }: { photos: Photo[] }) {
   const [index, setIndex] = useState(0)
 
   const next = useCallback(() => {
@@ -96,7 +102,9 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
           />
         ))}
 
-        <p className="mt-2 text-[10px]">{title}</p>
+        <p className="mt-2 text-[10px]">
+          {photos[index].alt}{photos[index].date ? ` (${formatDate(photos[index].date)})` : ''}
+        </p>
       </div>
     </main>
   )
