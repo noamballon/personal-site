@@ -25,7 +25,7 @@ export default {
           options: { hotspot: true },
           fields: [
             { name: 'alt', type: 'string', title: 'Alt text' },
-            { name: 'date', type: 'string', title: 'Date', description: 'e.g. March 2024' }
+            { name: 'date', type: 'date', title: 'Date' }
           ]
         }
       ]
