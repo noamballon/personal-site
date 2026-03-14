@@ -12,8 +12,14 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
   }, [photos.length])
 
   useEffect(() => {
+    let cooldown = false
     const onWheel = (e: WheelEvent) => {
-      if (e.deltaY > 0) next()
+      if (cooldown) return
+      if (e.deltaY > 0) {
+        next()
+        cooldown = true
+        setTimeout(() => { cooldown = false }, 800)
+      }
     }
     window.addEventListener('wheel', onWheel)
     return () => window.removeEventListener('wheel', onWheel)
