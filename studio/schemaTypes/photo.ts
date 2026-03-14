@@ -24,7 +24,8 @@ export default {
           type: 'image',
           options: { hotspot: true },
           fields: [
-            { name: 'alt', type: 'string', title: 'Alt text' }
+            { name: 'alt', type: 'string', title: 'Alt text' },
+            { name: 'date', type: 'string', title: 'Date', description: 'e.g. March 2024' }
           ]
         }
       ]
