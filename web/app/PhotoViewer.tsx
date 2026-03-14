@@ -7,7 +7,7 @@ type Photo = { id: string; url: string; alt: string; date: string }
 function formatDate(date: string) {
   if (!date) return ''
   const [y, m, d] = date.split('-')
-  return `${m}-${d}-${y.slice(2)}`
+  return `${d}.${m}.${y.slice(2)}`
 }
 
 export default function PhotoViewer({ photos }: { photos: Photo[] }) {
