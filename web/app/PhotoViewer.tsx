@@ -82,7 +82,7 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
         >
           azou studio
         </a>
-        {' '}- we provide design services and publish via{' '}
+        {' '}- a design studio with a publishing arm via{' '}
         <a
           href="https://editions.azou.studio"
           onClick={e => e.stopPropagation()}
