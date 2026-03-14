@@ -78,7 +78,7 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
         <a
           href="https://www.azou.studio"
           onClick={e => e.stopPropagation()}
-          className="underline hover:opacity-50 transition-opacity"
+          className="underline hover:opacity-50 transition-opacity cursor-alias"
         >
           azou studio
         </a>
@@ -86,7 +86,7 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
         <a
           href="https://editions.azou.studio"
           onClick={e => e.stopPropagation()}
-          className="underline hover:opacity-50 transition-opacity"
+          className="underline hover:opacity-50 transition-opacity cursor-alias"
         >
           azou editions
         </a>
