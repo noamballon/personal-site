@@ -17,7 +17,13 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://noam-ballon.com'),
   title: "Noam",
   description: "Noam Ballon",
-  icons: { icon: '/favicon.png' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
