@@ -9,6 +9,13 @@ export default {
       type: 'string',
     },
     {
+      name: 'isActive',
+      title: 'Show on site',
+      type: 'boolean',
+      description: 'Only one gallery should be active at a time.',
+      initialValue: false,
+    },
+    {
       name: 'images',
       title: 'Images',
       type: 'array',

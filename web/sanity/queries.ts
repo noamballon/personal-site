@@ -6,7 +6,7 @@ export const urlFor = (source: any) => builder.image(source)
 
 export async function getGallery() {
   return client.fetch(`
-    *[_type == "gallery"][0] {
+    *[_type == "gallery" && isActive == true][0] {
       title,
       images[] {
         _key,
