@@ -9,6 +9,9 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export default async function OGImage() {
+  const fontData = await fetch(
+    'https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/Geist-Regular.woff2'
+  ).then(r => r.arrayBuffer())
   const gallery = await client.fetch(`
     *[_type == "gallery" && isActive == true][0] {
       images[] { _key, asset, alt, date }
@@ -51,11 +54,11 @@ export default async function OGImage() {
             }}
           />
           {caption && (
-            <p style={{ margin: '8px 0 0', fontSize: 14, color: '#000' }}>{caption}</p>
+            <div style={{ display: 'flex', marginTop: 8, fontSize: 13, color: '#000', fontFamily: 'Geist' }}>{caption}</div>
           )}
         </div>
       )}
     </div>,
-    { width: 1200, height: 630 }
+    { width: 1200, height: 630, fonts: [{ name: 'Geist', data: fontData, weight: 400 }] }
   )
 }
