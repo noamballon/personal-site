@@ -3,6 +3,7 @@ import { client } from '@/sanity/client'
 import { createImageUrlBuilder } from '@sanity/image-url'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 export const alt = 'Noam Ballon'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
