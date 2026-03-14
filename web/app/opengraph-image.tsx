@@ -38,7 +38,7 @@ export default async function OGImage() {
         <img
           src={url}
           style={{
-            maxWidth: '60%',
+            maxWidth: '40%',
             maxHeight: '100%',
             objectFit: 'contain',
           }}
