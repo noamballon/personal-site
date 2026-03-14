@@ -10,7 +10,7 @@ export const contentType = 'image/png'
 
 export default async function OGImage() {
   const [fontData, gallery] = await Promise.all([
-    fetch('https://cdn.jsdelivr.net/npm/geist/dist/fonts/geist-sans/Geist-Regular.woff2')
+    fetch('https://cdn.jsdelivr.net/npm/geist/dist/fonts/geist-sans/Geist-Regular.ttf')
       .then(r => r.arrayBuffer())
       .catch(() => null),
     client.fetch(`
