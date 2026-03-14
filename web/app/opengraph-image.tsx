@@ -10,7 +10,7 @@ export const contentType = 'image/png'
 
 export default async function OGImage() {
   const fontData = await fetch(
-    'https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/Geist-Regular.woff2'
+    'https://cdn.jsdelivr.net/npm/geist/dist/fonts/geist-sans/Geist-Regular.woff2'
   ).then(r => r.arrayBuffer())
   const gallery = await client.fetch(`
     *[_type == "gallery" && isActive == true][0] {

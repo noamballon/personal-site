@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://noam-ballon.com'),
   title: "Noam",
   description: "Noam Ballon",
   icons: { icon: '/favicon.png' },
