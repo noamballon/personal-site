@@ -84,7 +84,7 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
         </a>
         {' '}- we provide design services and publish via{' '}
         <a
-          href="https://www.editions.azou.studio/"
+          href="https://editions.azou.studio"
           onClick={e => e.stopPropagation()}
           className="hover:opacity-50 transition-opacity"
         >
