@@ -11,15 +11,18 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
     setIndex(i => (i + 1) % photos.length)
   }, [photos.length])
 
+  const prev = useCallback(() => {
+    setIndex(i => (i - 1 + photos.length) % photos.length)
+  }, [photos.length])
+
   useEffect(() => {
     let cooldown = false
     const onWheel = (e: WheelEvent) => {
       if (cooldown) return
-      if (e.deltaY > 0) {
-        next()
-        cooldown = true
-        setTimeout(() => { cooldown = false }, 800)
-      }
+      if (e.deltaY > 0) next()
+      else if (e.deltaY < 0) prev()
+      cooldown = true
+      setTimeout(() => { cooldown = false }, 800)
     }
     window.addEventListener('wheel', onWheel)
     return () => window.removeEventListener('wheel', onWheel)
@@ -28,6 +31,7 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next()
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -44,6 +48,7 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
     const onTouchEnd = (e: TouchEvent) => {
       const diff = startY - e.changedTouches[0].clientY
       if (diff > 30) next()
+      else if (diff < -30) prev()
     }
     window.addEventListener('touchstart', onTouchStart)
     window.addEventListener('touchmove', onTouchMove, { passive: false })
