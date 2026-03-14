@@ -78,17 +78,17 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
         <a
           href="https://www.azou.studio"
           onClick={e => e.stopPropagation()}
-          className="hover:opacity-50 transition-opacity"
+          className="underline hover:opacity-50 transition-opacity"
         >
-          azou.studio
+          azou studio
         </a>
         {' '}- we provide design services and publish via{' '}
         <a
           href="https://editions.azou.studio"
           onClick={e => e.stopPropagation()}
-          className="hover:opacity-50 transition-opacity"
+          className="underline hover:opacity-50 transition-opacity"
         >
-          azou.editions
+          azou editions
         </a>
       </p>
 
