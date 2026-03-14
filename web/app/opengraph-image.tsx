@@ -20,7 +20,7 @@ export default async function OGImage() {
 
   const builder = createImageUrlBuilder(client as any)
   const url = photo
-    ? builder.image(photo).width(1200).height(630).fit('crop').url()
+    ? builder.image(photo).width(720).url()
     : null
 
   return new ImageResponse(
@@ -37,9 +37,11 @@ export default async function OGImage() {
       {url && (
         <img
           src={url}
-          width={1200}
-          height={630}
-          style={{ objectFit: 'cover' }}
+          style={{
+            maxWidth: '60%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+          }}
         />
       )}
     </div>,
