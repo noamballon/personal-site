@@ -33,6 +33,28 @@ export default function PhotoViewer({ photos, title }: { photos: Photo[]; title:
     return () => window.removeEventListener('keydown', onKey)
   }, [next])
 
+  useEffect(() => {
+    let startY = 0
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault()
+    }
+    const onTouchEnd = (e: TouchEvent) => {
+      const diff = startY - e.changedTouches[0].clientY
+      if (diff > 30) next()
+    }
+    window.addEventListener('touchstart', onTouchStart)
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
+    window.addEventListener('touchend', onTouchEnd)
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [next])
+
   if (!photos.length) return null
 
   return (
