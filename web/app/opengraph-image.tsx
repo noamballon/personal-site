@@ -10,7 +10,7 @@ export const contentType = 'image/png'
 
 export default async function OGImage() {
   const [fontData, gallery] = await Promise.all([
-    fetch('https://cdn.jsdelivr.net/npm/geist/dist/fonts/geist-sans/Geist-Regular.ttf')
+    fetch('https://cdn.jsdelivr.net/npm/geist/dist/fonts/geist-sans/Geist-Light.ttf')
       .then(r => r.arrayBuffer())
       .catch(() => null),
     client.fetch(`
@@ -33,7 +33,7 @@ export default async function OGImage() {
   const caption = [photo?.alt, formattedDate ? `(${formattedDate})` : null].filter(Boolean).join(' ')
 
   const fonts = fontData
-    ? [{ name: 'Geist', data: fontData, weight: 400 as const }]
+    ? [{ name: 'Geist', data: fontData, weight: 300 as const }]
     : []
 
   return new ImageResponse(
