@@ -73,7 +73,7 @@ export default function PhotoViewer({ photos }: { photos: Photo[] }) {
       onClick={next}
       className="relative w-screen h-screen cursor-pointer bg-white"
     >
-      <p className="absolute top-6 left-6 text-[10px]">
+      <p className="absolute top-6 left-6 right-6 text-[10px]">
         I take photos and run{' '}
         <a
           href="https://www.azou.studio"
