@@ -13,10 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description = "Noam Ballon is a designer running Azou Studio. He provides design services and publishes printed objects through Azou Editions.";
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://noam-ballon.com'),
-  title: "Noam",
-  description: "Noam Ballon",
+  title: "Noam Ballon",
+  description,
+  openGraph: {
+    title: "Noam Ballon",
+    description,
+    url: "https://noam-ballon.com",
+    siteName: "Noam Ballon",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Noam Ballon",
+    description,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
