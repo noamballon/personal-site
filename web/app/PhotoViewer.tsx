@@ -44,7 +44,7 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
     <div className="w-screen h-screen shrink-0 flex items-center justify-center">
       <div className="flex flex-col items-center">
         <div
-          className="relative [--maxw:67.2vw] [--maxh:67.2vh] sm:[--maxw:56vw] sm:[--maxh:56vh]"
+          className="relative overflow-hidden [--maxw:67.2vw] [--maxh:67.2vh] sm:[--maxw:56vw] sm:[--maxh:56vh]"
           style={{ aspectRatio: ar, width: `min(var(--maxw), calc(var(--maxh) * ${ar}))` }}
         >
           {photo.lqip && (
@@ -52,7 +52,8 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
               src={photo.lqip}
               alt=""
               aria-hidden="true"
-              className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 ${loaded ? 'opacity-0' : 'opacity-100'}`}
+              style={{ transform: 'scale(1.1)' }}
+              className={`absolute inset-0 w-full h-full object-cover blur-xl ${loaded ? 'opacity-0' : 'opacity-100'}`}
             />
           )}
           <img
