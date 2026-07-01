@@ -110,26 +110,56 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
     setPhotoIndices(arr => arr.map((v, i) => (i === index ? mod(v + dir, photos.length) : v)))
   }, [collections, index])
 
+  // nextCollection/prevCollection/cyclePhoto change identity whenever index
+  // changes (i.e. right when a collection switch completes). Keeping the
+  // latest versions in a ref - rather than the effects' dependency arrays -
+  // means the listeners below stay mounted for the component's whole
+  // lifetime instead of being torn down and recreated mid-gesture, which
+  // would otherwise reset the wheel debounce state while trackpad momentum
+  // is still firing and cause it to double-trigger a collection change.
+  const latest = useRef({ nextCollection, prevCollection, cyclePhoto })
   useEffect(() => {
-    let cooldown = false
+    latest.current = { nextCollection, prevCollection, cyclePhoto }
+  })
+
+  useEffect(() => {
+    let cooling = false
+    let idleTimer: ReturnType<typeof setTimeout> | null = null
+
+    const armIdleTimer = () => {
+      if (idleTimer) clearTimeout(idleTimer)
+      idleTimer = setTimeout(() => { cooling = false }, 150)
+    }
+
     const onWheel = (e: WheelEvent) => {
+      const { nextCollection, prevCollection, cyclePhoto } = latest.current
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         if (e.deltaX > 0) cyclePhoto(1)
         else if (e.deltaX < 0) cyclePhoto(-1)
         return
       }
-      if (cooldown) return
+      if (cooling) {
+        // Trackpad momentum keeps firing wheel events well after the swipe
+        // ends - keep extending the suppression window instead of letting
+        // the tail of one swipe trigger a second collection change.
+        armIdleTimer()
+        return
+      }
       if (e.deltaY > 0) nextCollection()
       else if (e.deltaY < 0) prevCollection()
-      cooldown = true
-      setTimeout(() => { cooldown = false }, TRANSITION_MS + 200)
+      cooling = true
+      armIdleTimer()
     }
     window.addEventListener('wheel', onWheel)
-    return () => window.removeEventListener('wheel', onWheel)
-  }, [nextCollection, prevCollection, cyclePhoto])
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      if (idleTimer) clearTimeout(idleTimer)
+    }
+  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const { nextCollection, prevCollection, cyclePhoto } = latest.current
       if (e.key === 'ArrowRight') cyclePhoto(1)
       else if (e.key === 'ArrowLeft') cyclePhoto(-1)
       else if (e.key === 'ArrowDown') nextCollection()
@@ -137,7 +167,7 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [nextCollection, prevCollection, cyclePhoto])
+  }, [])
 
   useEffect(() => {
     let startX = 0
@@ -150,6 +180,7 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
       e.preventDefault()
     }
     const onTouchEnd = (e: TouchEvent) => {
+      const { nextCollection, prevCollection, cyclePhoto } = latest.current
       const diffX = startX - e.changedTouches[0].clientX
       const diffY = startY - e.changedTouches[0].clientY
       if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -168,7 +199,7 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
       window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('touchend', onTouchEnd)
     }
-  }, [nextCollection, prevCollection, cyclePhoto])
+  }, [])
 
   if (!count) return null
 
