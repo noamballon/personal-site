@@ -52,7 +52,7 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
               src={photo.lqip}
               alt=""
               aria-hidden="true"
-              className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 transition-opacity duration-300 ${loaded ? 'opacity-0' : 'opacity-100'}`}
+              className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 ${loaded ? 'opacity-0' : 'opacity-100'}`}
             />
           )}
           <img
@@ -60,7 +60,7 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
             key={photo.id}
             src={photo.url}
             alt={photo.alt}
-            className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute inset-0 w-full h-full object-contain ${loaded ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
         <p className="mt-2 text-[10px]">
