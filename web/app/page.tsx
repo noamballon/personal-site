@@ -1,14 +1,20 @@
-import { getGallery, urlFor } from '@/sanity/queries'
+import { getGalleries, urlFor } from '@/sanity/queries'
 import PhotoViewer from './PhotoViewer'
 
 export default async function Home() {
-  const gallery = await getGallery()
-  const urls = (gallery.images ?? []).map((p: any) => ({
-    id: p._key,
-    url: urlFor(p).url(),
-    alt: p.alt ?? '',
-    date: p.date ?? '',
-  }))
+  const galleries = await getGalleries()
+  const collections = (galleries ?? [])
+    .map((g: any) => ({
+      id: g._id,
+      title: g.title ?? '',
+      photos: (g.images ?? []).map((p: any) => ({
+        id: p._key,
+        url: urlFor(p).url(),
+        alt: p.alt ?? '',
+        date: p.date ?? '',
+      })),
+    }))
+    .filter((c: any) => c.photos.length > 0)
 
-  return <PhotoViewer photos={urls} />
+  return <PhotoViewer collections={collections} />
 }

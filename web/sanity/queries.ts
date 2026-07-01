@@ -4,14 +4,15 @@ import { createImageUrlBuilder } from '@sanity/image-url'
 const builder = createImageUrlBuilder(client)
 export const urlFor = (source: any) => builder.image(source)
 
-export async function getGallery() {
+export async function getGalleries() {
   return client.fetch(`
-    *[_type == "gallery" && isActive == true][0] {
+    *[_type == "gallery"] | order(orderRank asc) {
+      _id,
       title,
       images[] {
         _key,
-        alt,
-        date,
+        "alt": asset->altText,
+        "date": asset->date,
         asset
       }
     }
