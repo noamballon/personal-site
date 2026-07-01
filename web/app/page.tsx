@@ -12,6 +12,8 @@ export default async function Home() {
         url: urlFor(p).width(2000).quality(75).auto('format').fit('max').url(),
         alt: p.alt ?? '',
         date: p.date ?? '',
+        lqip: p.lqip ?? '',
+        aspectRatio: p.aspectRatio ?? undefined,
       })),
     }))
     .filter((c: any) => c.photos.length > 0)

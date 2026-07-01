@@ -13,6 +13,8 @@ export async function getGalleries() {
         _key,
         "alt": asset->title,
         "date": asset->date,
+        "lqip": asset->metadata.lqip,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio,
         asset
       }
     }

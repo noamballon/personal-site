@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 
-type Photo = { id: string; url: string; alt: string; date: string }
+type Photo = { id: string; url: string; alt: string; date: string; lqip?: string; aspectRatio?: number }
 type Collection = { id: string; title: string; photos: Photo[] }
 
 const TRANSITION_MS = 600
@@ -19,16 +19,50 @@ function mod(n: number, m: number) {
 
 function Panel({ collection, photoIndex }: { collection: Collection; photoIndex: number }) {
   const photo = collection.photos[photoIndex] ?? collection.photos[0]
+  const [loaded, setLoaded] = useState(false)
+  const [loadedForId, setLoadedForId] = useState(photo?.id)
+
+  if (photo?.id !== loadedForId) {
+    setLoadedForId(photo?.id)
+    setLoaded(false)
+  }
+
+  const handleImgRef = useCallback((node: HTMLImageElement | null) => {
+    if (!node) return
+    if (node.complete) {
+      setLoaded(true)
+    } else {
+      node.addEventListener('load', () => setLoaded(true), { once: true })
+    }
+  }, [])
+
   if (!photo) return <div className="w-screen h-screen shrink-0" />
+
+  const ar = photo.aspectRatio || 1.5
 
   return (
     <div className="w-screen h-screen shrink-0 flex items-center justify-center">
       <div className="flex flex-col items-center">
-        <img
-          src={photo.url}
-          alt={photo.alt}
-          className="max-w-[67.2vw] max-h-[67.2vh] w-auto h-auto sm:max-w-[56vw] sm:max-h-[56vh]"
-        />
+        <div
+          className="relative [--maxw:67.2vw] [--maxh:67.2vh] sm:[--maxw:56vw] sm:[--maxh:56vh]"
+          style={{ aspectRatio: ar, width: `min(var(--maxw), calc(var(--maxh) * ${ar}))` }}
+        >
+          {photo.lqip && (
+            <img
+              src={photo.lqip}
+              alt=""
+              aria-hidden="true"
+              className={`absolute inset-0 w-full h-full object-cover blur-xl scale-110 transition-opacity duration-300 ${loaded ? 'opacity-0' : 'opacity-100'}`}
+            />
+          )}
+          <img
+            ref={handleImgRef}
+            key={photo.id}
+            src={photo.url}
+            alt={photo.alt}
+            className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          />
+        </div>
         <p className="mt-2 text-[10px]">
           {photo.alt}{photo.date ? ` (${formatDate(photo.date)})` : ''}
         </p>
