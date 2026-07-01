@@ -40,7 +40,7 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
 export default function PhotoViewer({ collections }: { collections: Collection[] }) {
   const count = collections.length
   const [index, setIndex] = useState(0)
-  const [photoIndex, setPhotoIndex] = useState(0)
+  const [photoIndices, setPhotoIndices] = useState<number[]>(() => collections.map(() => 0))
   const [pending, setPending] = useState<0 | 1 | -1>(0)
   const [transitionEnabled, setTransitionEnabled] = useState(true)
   const animating = useRef(false)
@@ -58,7 +58,6 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
   const handleTransitionEnd = useCallback(() => {
     if (pending === 0) return
     setIndex(i => mod(i + pending, count))
-    setPhotoIndex(0)
     setTransitionEnabled(false)
     setPending(0)
     animating.current = false
@@ -74,7 +73,7 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
     if (animating.current) return
     const photos = collections[index]?.photos
     if (!photos || photos.length < 2) return
-    setPhotoIndex(i => mod(i + dir, photos.length))
+    setPhotoIndices(arr => arr.map((v, i) => (i === index ? mod(v + dir, photos.length) : v)))
   }, [collections, index])
 
   useEffect(() => {
@@ -174,9 +173,9 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
           transition: transitionEnabled ? `transform ${TRANSITION_MS}ms ease` : 'none',
         }}
       >
-        <Panel collection={collections[prevIdx]} photoIndex={0} />
-        <Panel collection={collections[index]} photoIndex={photoIndex} />
-        <Panel collection={collections[nextIdx]} photoIndex={0} />
+        <Panel collection={collections[prevIdx]} photoIndex={photoIndices[prevIdx] ?? 0} />
+        <Panel collection={collections[index]} photoIndex={photoIndices[index] ?? 0} />
+        <Panel collection={collections[nextIdx]} photoIndex={photoIndices[nextIdx] ?? 0} />
       </div>
     </main>
   )
