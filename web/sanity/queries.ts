@@ -11,7 +11,7 @@ export async function getGalleries() {
       title,
       images[] {
         _key,
-        "alt": asset->altText,
+        "alt": asset->title,
         "date": asset->date,
         asset
       }
