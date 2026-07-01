@@ -4,6 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {media} from 'sanity-plugin-media'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import {schemaTypes} from './schemaTypes'
+import {MediaDetailsWithDate} from './components/MediaDetailsWithDate'
 
 export default defineConfig({
   name: 'default',
@@ -27,7 +28,12 @@ export default defineConfig({
           ]),
     }),
     visionTool(),
-    media(),
+    media({
+      creditLine: {enabled: false},
+      components: {
+        details: MediaDetailsWithDate,
+      },
+    }),
   ],
 
   schema: {

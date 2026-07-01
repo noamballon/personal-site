@@ -27,7 +27,7 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
         <img
           src={photo.url}
           alt={photo.alt}
-          className="max-w-[56vw] max-h-[56vh] w-auto h-auto"
+          className="max-w-[67.2vw] max-h-[67.2vh] w-auto h-auto sm:max-w-[56vw] sm:max-h-[56vh]"
         />
         <p className="mt-2 text-[10px]">
           {photo.alt}{photo.date ? ` (${formatDate(photo.date)})` : ''}
