@@ -9,7 +9,7 @@ export default async function Home() {
       title: g.title ?? '',
       photos: (g.images ?? []).map((p: any) => ({
         id: p._key,
-        url: urlFor(p).url(),
+        url: urlFor(p).width(2000).quality(75).auto('format').fit('max').url(),
         alt: p.alt ?? '',
         date: p.date ?? '',
       })),
