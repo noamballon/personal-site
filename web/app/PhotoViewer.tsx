@@ -17,7 +17,7 @@ function mod(n: number, m: number) {
   return ((n % m) + m) % m
 }
 
-function Panel({ collection, photoIndex }: { collection: Collection; photoIndex: number }) {
+function Panel({ collection, photoIndex, onImageClick }: { collection: Collection; photoIndex: number; onImageClick: () => void }) {
   const photo = collection.photos[photoIndex] ?? collection.photos[0]
   const [loaded, setLoaded] = useState(false)
   const [loadedForId, setLoadedForId] = useState(photo?.id)
@@ -44,7 +44,8 @@ function Panel({ collection, photoIndex }: { collection: Collection; photoIndex:
     <div className="w-screen h-screen shrink-0 flex items-center justify-center">
       <div className="flex flex-col items-center">
         <div
-          className="relative overflow-hidden [--maxw:67.2vw] [--maxh:67.2vh] sm:[--maxw:56vw] sm:[--maxh:56vh]"
+          onClick={onImageClick}
+          className="relative overflow-hidden cursor-pointer [--maxw:67.2vw] [--maxh:67.2vh] sm:[--maxw:56vw] sm:[--maxh:56vh]"
           style={{ aspectRatio: ar, width: `min(var(--maxw), calc(var(--maxh) * ${ar}))` }}
         >
           {photo.lqip && (
@@ -124,38 +125,29 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
   })
 
   useEffect(() => {
-    let cooling = false
-    let idleTimer: ReturnType<typeof setTimeout> | null = null
-
-    const armIdleTimer = () => {
-      if (idleTimer) clearTimeout(idleTimer)
-      idleTimer = setTimeout(() => { cooling = false }, 150)
-    }
+    // go()/cyclePhoto already refuse to act while a collection switch is
+    // animating, which naturally covers the strong initial burst of a
+    // trackpad swipe. The only remaining risk is the tail end of momentum
+    // still trickling in once that's over - but by then its delta is small,
+    // so a plain magnitude threshold filters it out without needing any
+    // separate cooldown timer that could keep extending itself and block
+    // the next real scroll (which was the previous, over-eager fix here).
+    const SCROLL_THRESHOLD = 15
 
     const onWheel = (e: WheelEvent) => {
       const { nextCollection, prevCollection, cyclePhoto } = latest.current
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        if (Math.abs(e.deltaX) < SCROLL_THRESHOLD) return
         if (e.deltaX > 0) cyclePhoto(1)
         else if (e.deltaX < 0) cyclePhoto(-1)
         return
       }
-      if (cooling) {
-        // Trackpad momentum keeps firing wheel events well after the swipe
-        // ends - keep extending the suppression window instead of letting
-        // the tail of one swipe trigger a second collection change.
-        armIdleTimer()
-        return
-      }
+      if (Math.abs(e.deltaY) < SCROLL_THRESHOLD) return
       if (e.deltaY > 0) nextCollection()
       else if (e.deltaY < 0) prevCollection()
-      cooling = true
-      armIdleTimer()
     }
     window.addEventListener('wheel', onWheel)
-    return () => {
-      window.removeEventListener('wheel', onWheel)
-      if (idleTimer) clearTimeout(idleTimer)
-    }
+    return () => window.removeEventListener('wheel', onWheel)
   }, [])
 
   useEffect(() => {
@@ -209,15 +201,11 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
   const translateVh = pending === 1 ? -200 : pending === -1 ? 0 : -100
 
   return (
-    <main
-      onClick={() => cyclePhoto(1)}
-      className="relative w-screen h-screen overflow-hidden cursor-pointer bg-white"
-    >
+    <main className="relative w-screen h-screen overflow-hidden bg-white">
       <p className="absolute top-6 left-6 right-6 text-[10px] z-10">
         I take photos and run{' '}
         <a
           href="https://www.azou.studio"
-          onClick={e => e.stopPropagation()}
           className="underline hover:opacity-50 transition-opacity cursor-alias"
         >
           azou studio
@@ -225,7 +213,6 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
         {' '}- a design studio with a publishing arm via{' '}
         <a
           href="https://editions.azou.studio"
-          onClick={e => e.stopPropagation()}
           className="underline hover:opacity-50 transition-opacity cursor-alias"
         >
           azou editions
@@ -239,9 +226,9 @@ export default function PhotoViewer({ collections }: { collections: Collection[]
           transition: transitionEnabled ? `transform ${TRANSITION_MS}ms ease` : 'none',
         }}
       >
-        <Panel collection={collections[prevIdx]} photoIndex={photoIndices[prevIdx] ?? 0} />
-        <Panel collection={collections[index]} photoIndex={photoIndices[index] ?? 0} />
-        <Panel collection={collections[nextIdx]} photoIndex={photoIndices[nextIdx] ?? 0} />
+        <Panel collection={collections[prevIdx]} photoIndex={photoIndices[prevIdx] ?? 0} onImageClick={() => cyclePhoto(1)} />
+        <Panel collection={collections[index]} photoIndex={photoIndices[index] ?? 0} onImageClick={() => cyclePhoto(1)} />
+        <Panel collection={collections[nextIdx]} photoIndex={photoIndices[nextIdx] ?? 0} onImageClick={() => cyclePhoto(1)} />
       </div>
     </main>
   )
